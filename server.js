@@ -3,6 +3,7 @@ var path = require('path');
 var exphbs = require('express-handlebars');
 var async = require('async');
 var request = require('request');
+var bodyParser = require('body-parser')
 
 var app = express();
 
@@ -11,13 +12,12 @@ app.engine('handlebars', exphbs({defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
 app.set('port', (process.env.PORT || 3000));
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-
-app.get('/', function(req,res){
+app.post('/', urlencodedParser,function(req,res){
     var data = {};
-
-    var api_key ='RGAPI-3f7edfc8-7ac7-42d2-a35e-8f417560d489';
-    var s_toSearch = 'pkn parks'
+    var api_key ='RGAPI-09d7a414-0fdf-4d93-be18-1c5ecc87474d';
+    var s_toSearch = req.body.name
     var URL = 'https://oc1.api.riotgames.com/lol/summoner/v4/summoners/by-name/'+s_toSearch+'?api_key=' +api_key;
     //https://oc1.api.riotgames.com/lol/league/v4/entries/by-summoner/e5lrPFt6jsk12aEZqkvL4QimZA84t0IaD2z0YZXTxC6S?api_key=RGAPI-3f7edfc8-7ac7-42d2-a35e-8f417560d489
     async.waterfall([
@@ -33,6 +33,7 @@ app.get('/', function(req,res){
                     if(!err && response.statusCode == 200){
                         var json = JSON.parse(body);
                         data.tier = json[0].tier;
+                        data.rank = json[0].rank;
                         console.log(data)
                         callback(null,data);
                     }else{
@@ -43,7 +44,7 @@ app.get('/', function(req,res){
             }else{
                 console.log(err)
             }
-            
+
         });
         }
     ],
@@ -57,7 +58,9 @@ app.get('/', function(req,res){
             })
         });
 });
-
+app.get('/',function(req,res){
+    res.render('home')
+});
 app.listen(app.get('port'),function(){
     console.log('server started on port '+ app.get("port"))
 });
