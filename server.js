@@ -16,7 +16,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 app.post('/', urlencodedParser,function(req,res){
     var data = {};
-    var api_key ='RGAPI-09d7a414-0fdf-4d93-be18-1c5ecc87474d';
+    var api_key ='RGAPI-1cf35d25-40bc-4a58-875b-90d3a586dc72';
     var s_toSearch = req.body.name
     var URL = 'https://oc1.api.riotgames.com/lol/summoner/v4/summoners/by-name/'+s_toSearch+'?api_key=' +api_key;
     //https://oc1.api.riotgames.com/lol/league/v4/entries/by-summoner/e5lrPFt6jsk12aEZqkvL4QimZA84t0IaD2z0YZXTxC6S?api_key=RGAPI-3f7edfc8-7ac7-42d2-a35e-8f417560d489
@@ -32,8 +32,19 @@ app.post('/', urlencodedParser,function(req,res){
                 request('https://oc1.api.riotgames.com/lol/league/v4/entries/by-summoner/'+data.id+'?api_key=' +api_key, function (err, response, body) {
                     if(!err && response.statusCode == 200){
                         var json = JSON.parse(body);
-                        data.tier = json[0].tier;
-                        data.rank = json[0].rank;
+                        if(json.length === 0 ){
+                            data.tier = 'unranked, ';
+                            data.rank = 'cannot find stats';
+                        }else {
+                            for (var x in json) {
+                                if (json[x] !== 'undefined') {
+                                    if (json[x].queueType === 'RANKED_SOLO_5x5') {
+                                        data.tier = json[x].tier;
+                                        data.rank = json[x].rank;
+                                    }
+                                }
+                            }
+                        }
                         console.log(data)
                         callback(null,data);
                     }else{
