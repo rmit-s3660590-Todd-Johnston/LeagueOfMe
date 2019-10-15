@@ -16,9 +16,10 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 app.post('/', urlencodedParser,function(req,res){
     var data = {};
-    var api_key ='RGAPI-1cf35d25-40bc-4a58-875b-90d3a586dc72';
+    var api_key ='RGAPI-65fc5096-6b25-42fc-8515-222d0f15058b';
     var s_toSearch = req.body.name
-    var URL = 'https://oc1.api.riotgames.com/lol/summoner/v4/summoners/by-name/'+s_toSearch+'?api_key=' +api_key;
+    var r_toSearch = req.body.region
+    var URL = 'https://'+r_toSearch+'.api.riotgames.com/lol/summoner/v4/summoners/by-name/'+s_toSearch+'?api_key=' +api_key;
     //https://oc1.api.riotgames.com/lol/league/v4/entries/by-summoner/e5lrPFt6jsk12aEZqkvL4QimZA84t0IaD2z0YZXTxC6S?api_key=RGAPI-3f7edfc8-7ac7-42d2-a35e-8f417560d489
     async.waterfall([
         function(callback){
@@ -27,9 +28,8 @@ app.post('/', urlencodedParser,function(req,res){
                 var json = JSON.parse(body);
                 data.id = json.id;
                 data.name = json.name;
-                console.log(data.name);
-                URL = 'https://oc1.api.riotgames.com/lol/league/v4/entries/by-summoner/'+data.id+'?api_key=' +api_key;
-                request('https://oc1.api.riotgames.com/lol/league/v4/entries/by-summoner/'+data.id+'?api_key=' +api_key, function (err, response, body) {
+                URL = 'https://'+r_toSearch+'.api.riotgames.com/lol/league/v4/entries/by-summoner/'+data.id+'?api_key=' +api_key;
+                request(URL, function (err, response, body) {
                     if(!err && response.statusCode == 200){
                         var json = JSON.parse(body);
                         if(json.length === 0 ){
