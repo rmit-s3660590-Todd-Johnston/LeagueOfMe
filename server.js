@@ -60,7 +60,8 @@ app.post('/', urlencodedParser,function(req,res){
                                                 var favChamp = await findChampMastery(cm_URL)
                                                 data.champIcon = favChamp.icon
                                                 data.champName = favChamp.name
-                                            data.totalPoints = await findTotalChampPoints(cm_URL);
+                                                data.totalPoints = await findTotalChampPoints(cm_URL);
+                                                data.champPoints = await findChampPoints(cm_URL);
                                             } catch (err) {
                                                 console.log(err)
                                             }

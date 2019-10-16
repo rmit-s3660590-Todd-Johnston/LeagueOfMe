@@ -40,9 +40,6 @@
       }
     </script>
     <style>
-</div>
-and his favourite champion is {{info.champName}}
-<div id="content">{{info.name}} has an id of {{info.id}} and is ranked: {{info.tier}} {{info.rank}} <img src={{info.tierIcon}}><br>
         body {
             background-image:url({{info.champIcon}});
             background-repeat: repeat;
@@ -54,8 +51,8 @@ and his favourite champion is {{info.champName}}
           align-content: flex-start
         }
      img{
-         text-alignalignment: bottom;
-     }
+         text-alignment: bottom;
+        }
      content{
          background-color: aliceblue;
          color: black;
@@ -66,8 +63,9 @@ and his favourite champion is {{info.champName}}
   <body>
     <!--Div that will hold the pie chart-->
     <div id="chart_div"></div>
-    {{info.name}} has an id of {{info.id}} and is ranked: {{info.tier}} {{info.rank}}
-and his favourite champion is {{info.champName}}, {{info.name}} has a total of {{info.champPoints}} champion points on {{info.champName}}
+    <div id="content">{{info.name}} has an id of {{info.id}} and is ranked: {{info.tier}} {{info.rank}} <img src={{info.tierIcon}}><br>
+  and his favourite champion is {{info.champName}}
+</div>
   </body>
 </html>
 
