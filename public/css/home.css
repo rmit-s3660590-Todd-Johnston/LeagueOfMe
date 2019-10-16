@@ -1,0 +1,16 @@
+body {
+    background-image: url('/images/background.jpg');    background-repeat: repeat;
+    background-position: right top;
+    text-align: center;
+}
+.chart_div
+{
+  align-content: flex-start
+}
+img{
+ text-alignment: bottom;
+}
+content{
+ background-color: aliceblue;
+ color: black;
+}

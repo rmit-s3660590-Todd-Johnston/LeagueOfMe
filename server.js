@@ -7,15 +7,14 @@ var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient
 
 var app = express();
-app.use(express.static('views/images'));
-app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, '/public')));
+//app.set('views', path.join(__dirname, 'views'));
 app.engine('handlebars', exphbs({defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
 app.set('port', (process.env.PORT || 3000));
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
-
 
 app.post('/', urlencodedParser,function(req,res){
     var data = {};

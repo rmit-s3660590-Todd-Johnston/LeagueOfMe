@@ -1,5 +1,6 @@
 <html>
   <head>
+     <link rel="stylesheet" type="text/css" href="/css/home.css">
     <!--Load the AJAX API-->
     
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -32,38 +33,29 @@
         // Set chart options
         var options = {'title':'Champion Mastery',
                        'width':400,
-                       'height':300};
+                       'height':300,
+                       colors: ['#ff73ff', '#2bd1ff'],
+                       pieHole: 0.4,
+                       backgroundColor: { fill:'transparent' },
+                       titleTextStyle: {
+                        color: '#ff8a1c',    // any HTML string color ('red', '#cc00cc')
+                        fontName: 'Calibri', // i.e. 'Times New Roman'
+                        fontSize: 18, // 12, 18 whatever you want (don't specify px)
+                                      },
+                        };
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
         chart.draw(data, options);
       }
     </script>
-    <style>
-        body {
-            background-image:url({{info.champIcon}});
-            background-repeat: repeat;
-            background-position: right top;
-            text-align: center;
-        }
-        .chart_div
-        {
-          align-content: flex-start
-        }
-     img{
-         text-alignment: bottom;
-        }
-     content{
-         background-color: aliceblue;
-         color: black;
-     }
- </style>
   </head>
 
   <body>
     <!--Div that will hold the pie chart-->
     <div id="chart_div"></div>
-    <div id="content">{{info.name}} has an id of {{info.id}} and is ranked: {{info.tier}} {{info.rank}} <img src={{info.tierIcon}}><br>
+    <div id="content">{{info.name}} has an id of {{info.id}} and is ranked: {{info.tier}} {{info.rank}} <img src={{info.tierIcon}}>
+    <img src={{info.champIcon}}><br>
   and his favourite champion is {{info.champName}}
 </div>
   </body>
