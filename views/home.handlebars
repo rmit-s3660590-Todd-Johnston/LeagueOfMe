@@ -32,16 +32,25 @@
 
         // Set chart options
         var options = {'title':'Champion Mastery',
-                       'width':400,
-                       'height':300,
-                       colors: ['#ff73ff', '#2bd1ff'],
+                       width: 250,
+                       height: 250,
+                       chartArea: {width: '94%', height: '80%'},
+                       colors: ['#06b0ff', '#ff0a58'],
                        pieHole: 0.4,
                        backgroundColor: { fill:'transparent' },
                        titleTextStyle: {
-                        color: '#ff8a1c',    // any HTML string color ('red', '#cc00cc')
+                        color: '#ffdd06',    // any HTML string color ('red', '#cc00cc')
                         fontName: 'Calibri', // i.e. 'Times New Roman'
-                        fontSize: 18, // 12, 18 whatever you want (don't specify px)
+                        fontSize: 20, // 12, 18 whatever you want (don't specify px)
                                       },
+                                       slices: {  1: {offset: 0.2},
+                                                  12: {offset: 0.2},
+                                    },
+                        legend: 
+                        {
+                          textStyle:{color: 'ffdd06', fontSize: 16},
+                           width: '100%',
+                        },
                         };
 
         // Instantiate and draw our chart, passing in some options.
@@ -50,13 +59,16 @@
       }
     </script>
   </head>
-
+<!--Div for visuals-->
+    <div id = "visuals_div">
+      <div id="icon_div"><img src={{info.champIcon}} width="200" height="200"></div>
+      <div id="chart_div"></div>
+      <div id="rank_div"><img src={{info.tierIcon}} width="200" height="200"></div>
+    </div>
   <body>
-    <!--Div that will hold the pie chart-->
-    <div id="chart_div"></div>
-    <div id="content">{{info.name}} has an id of {{info.id}} and is ranked: {{info.tier}} {{info.rank}} <img src={{info.tierIcon}}>
-    <img src={{info.champIcon}}><br>
-  and his favourite champion is {{info.champName}}
+    <div id="content">{{info.name}} has an id of {{info.id}} and is ranked: {{info.tier}} {{info.rank}}
+    <br>
+    and his favourite champion is {{info.champName}}
 </div>
   </body>
 </html>
