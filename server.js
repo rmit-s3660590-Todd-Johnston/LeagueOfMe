@@ -19,7 +19,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 app.post('/', urlencodedParser,function(req,res){
     var data = {};
-    var api_key ='RGAPI-0048cdc5-a6eb-4598-8de0-de68c421055d';
+    var api_key ='RGAPI-d707939c-f2c8-4433-ab3b-7287f7ff2fd7';
     var s_toSearch = req.body.name
     var r_toSearch = req.body.region
     var sum_URL = 'https://'+r_toSearch+'.api.riotgames.com/lol/summoner/v4/summoners/by-name/'+s_toSearch+'?api_key=' +api_key;
@@ -43,7 +43,7 @@ app.post('/', urlencodedParser,function(req,res){
                                 data.champIcon = favChamp.icon
                                 data.champName = favChamp.name
                                 data.champPoints = await findChampPoints(cm_URL);
-                            
+                                data.totalPoints = await findTotalChampPoints(cm_url);
                             }catch(err){
                                 console.log(err)
                             }
@@ -58,6 +58,7 @@ app.post('/', urlencodedParser,function(req,res){
                                             data.champIcon = favChamp.icon
                                             data.champName = favChamp.name
                                             data.champPoints = await findChampPoints(cm_URL);
+                                            data.totalPoints = await findTotalChampPoints(cm_URL);
                                         }catch(err){
                                             console.log(err)
                                         }
@@ -138,6 +139,27 @@ function findChampPoints(cm_URL)
             console.log(champPoints)
         }
         resolve(champPoints);
+    });
+});
+}
+
+function findTotalChampPoints(cm_URL)
+{
+    return new Promise(function (resolve ,reject) {
+    request(cm_URL,  function (err, response, body)
+    {
+        if(!err && response.statusCode == 200) 
+        {
+            var json = JSON.parse(body);
+            var i;
+            var totalPoints = 0;
+            for(i = 0; i<json.length; i++)
+            {
+                totalPoints += json[i].championPoints;
+            }
+            console.log(totalPoints)
+        }
+        resolve(totalPoints);
     });
 });
 }
