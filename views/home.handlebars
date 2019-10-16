@@ -1,12 +1,57 @@
-<div id="content">{{info.name}} has an id of {{info.id}} and is ranked: {{info.tier}} {{info.rank}} <img src={{info.tierIcon}}><br>
-and his favourite champion is {{info.champName}}
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      
+      function drawChart() {
+
+        // Create the data table.
+        var champName = "{{info.champName}}";
+        var champPoints = {{info.champPoints}};
+        var totalPoints = {{info.totalPoints}};
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Points Type');
+        data.addColumn('number', 'Points');
+        data.addRows([
+          ['Total', totalPoints],
+          [champName, champPoints]
+        ]);
+
+        // Set chart options
+        var options = {'title':'Champion Mastery',
+                       'width':400,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+    <style>
 </div>
- <style>
+and his favourite champion is {{info.champName}}
+<div id="content">{{info.name}} has an id of {{info.id}} and is ranked: {{info.tier}} {{info.rank}} <img src={{info.tierIcon}}><br>
         body {
             background-image:url({{info.champIcon}});
             background-repeat: repeat;
             background-position: right top;
             text-align: center;
+        }
+        .chart_div
+        {
+          align-content: flex-start
         }
      img{
          text-alignalignment: bottom;
@@ -16,3 +61,13 @@ and his favourite champion is {{info.champName}}
          color: black;
      }
  </style>
+  </head>
+
+  <body>
+    <!--Div that will hold the pie chart-->
+    <div id="chart_div"></div>
+    {{info.name}} has an id of {{info.id}} and is ranked: {{info.tier}} {{info.rank}}
+and his favourite champion is {{info.champName}}, {{info.name}} has a total of {{info.champPoints}} champion points on {{info.champName}}
+  </body>
+</html>
+
