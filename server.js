@@ -42,7 +42,8 @@ app.post('/', urlencodedParser,function(req,res){
                                 var favChamp = await findChampMastery(cm_URL)
                                 data.champIcon = favChamp.icon
                                 data.champName = favChamp.name
-
+                                data.champPoints = await findChampPoints(cm_URL);
+                            
                             }catch(err){
                                 console.log(err)
                             }
@@ -56,7 +57,7 @@ app.post('/', urlencodedParser,function(req,res){
                                             var favChamp = await findChampMastery(cm_URL)
                                             data.champIcon = favChamp.icon
                                             data.champName = favChamp.name
-
+                                            data.champPoints = await findChampPoints(cm_URL);
                                         }catch(err){
                                             console.log(err)
                                         }
@@ -123,5 +124,21 @@ function findChampMastery(cm_URL) {
             }
         });
     })
+}
+
+function findChampPoints(cm_URL)
+{
+    return new Promise(function (resolve ,reject) {
+    request(cm_URL,  function (err, response, body)
+    {
+        if(!err && response.statusCode == 200) 
+        {
+            var json = JSON.parse(body);
+            var champPoints = json[0].championPoints;
+            console.log(champPoints)
+        }
+        resolve(champPoints);
+    });
+});
 }
 
