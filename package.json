@@ -18,5 +18,8 @@
     "request": "^2.88.0"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@google-cloud/storage": "^3.5.0"
+  }
 }
