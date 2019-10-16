@@ -42,7 +42,8 @@ app.post('/', urlencodedParser,function(req,res){
                                 var favChamp = await findChampMastery(cm_URL)
                                 data.champIcon = favChamp.icon
                                 data.champName = favChamp.name
-
+                                data.champPoints = await findChampPoints(cm_URL);
+                                data.totalPoints = await findTotalChampPoints(cm_url);
                             }catch(err){
                                 console.log(err)
                             }
@@ -59,7 +60,8 @@ app.post('/', urlencodedParser,function(req,res){
                                                 var favChamp = await findChampMastery(cm_URL)
                                                 data.champIcon = favChamp.icon
                                                 data.champName = favChamp.name
-
+                                                data.totalPoints = await findTotalChampPoints(cm_URL);
+                                                data.champPoints = await findChampPoints(cm_URL);
                                             } catch (err) {
                                                 console.log(err)
                                             }
@@ -154,4 +156,39 @@ function lowerCaseAllWordsExceptFirstLetters(string) {
     });
 }
 
+function findTotalChampPoints(cm_URL)
+{
+    return new Promise(function (resolve ,reject) {
+    request(cm_URL,  function (err, response, body)
+    {
+        if(!err && response.statusCode == 200) 
+        {
+            var json = JSON.parse(body);
+            var i;
+            var totalPoints = 0;
+            for(i = 0; i<json.length; i++)
+            {
+                totalPoints += json[i].championPoints;
+            }
+            console.log(totalPoints)
+        }
+        resolve(totalPoints);
+    });
+});
+}
 
+function findChampPoints(cm_URL)
+{
+    return new Promise(function (resolve ,reject) {
+    request(cm_URL,  function (err, response, body)
+    {
+        if(!err && response.statusCode == 200) 
+        {
+            var json = JSON.parse(body);
+            var champPoints = json[0].championPoints;
+            console.log(champPoints)
+        }
+        resolve(champPoints);
+    });
+});
+}
