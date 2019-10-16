@@ -19,7 +19,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 app.post('/', urlencodedParser,function(req,res){
     var data = {};
-    var api_key ='RGAPI-65fc5096-6b25-42fc-8515-222d0f15058b';
+    var api_key ='5b495b1f-7529-482f-b553-cd7044de7d5e';
     var s_toSearch = req.body.name
     var r_toSearch = req.body.region
     var sum_URL = 'https://'+r_toSearch+'.api.riotgames.com/lol/summoner/v4/summoners/by-name/'+s_toSearch+'?api_key=' +api_key;
