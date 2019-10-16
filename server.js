@@ -42,7 +42,15 @@ app.post('/', urlencodedParser,function(req,res){
                                 data.champIcon = favChamp.icon
                                 data.champName = favChamp.name
                                 data.champPoints = await findChampPoints(cm_URL);
-                                data.totalPoints = await findTotalChampPoints(cm_url);
+                                data.totalPoints = await findTotalChampPoints(cm_URL);
+                                data.topChamps = await top10champs(cm_URL);
+                                var champIcons = [10];
+                                for(var i = 0;i<champIcons.length;i++)
+                                {
+                                    champIcons[i] = await champIcon(data.topChamps[i]);
+                                    console.log(champIcons[i]);
+                                }
+                                data.top10ChampIcons = champIcons[i];
                             }catch(err){
                                 console.log(err)
                             }
@@ -61,6 +69,13 @@ app.post('/', urlencodedParser,function(req,res){
                                                 data.champName = favChamp.name
                                                 data.totalPoints = await findTotalChampPoints(cm_URL);
                                                 data.champPoints = await findChampPoints(cm_URL);
+                                                data.topChamps = await top10champs(cm_URL);
+                                                var champIcons = [10];
+                                                for(var i = 0;i<champIcons.length;i++)
+                                                {
+                                                    champIcons[i] = await champIcon(data.topChamps[i]);
+                                                }
+                                                data.top10ChampIcons = champIcons[i];
                                             } catch (err) {
                                                 console.log(err)
                                             }
@@ -191,3 +206,44 @@ function findChampPoints(cm_URL)
     });
 });
 }
+
+function top10champs(cm_URL)
+{
+    return new Promise(function (resolve ,reject) {
+        request(cm_URL,  function (err, response, body)
+        {
+            if(!err && response.statusCode == 200) 
+            {
+                var json = JSON.parse(body);
+                var i;
+                var champions = [10];
+                for(i = 0; i<9; i++)
+                {
+                    champions[i] = json[i].championId;
+                }
+                console.log(champions)
+            }
+            resolve(champions);
+        });
+    });
+}
+
+function champIcon(id)
+    {
+        return new Promise(function (resolve ,reject){
+        var champIcon;
+        
+            MongoClient.connect("mongodb+srv://nick:lolman1@cluster0-kxw5r.gcp.mongodb.net/test?retryWrites=true&w=majority", function(err, db) {
+                    if (err) throw err;
+                    var dbo = db.db("LeagueofME");
+                        dbo.collection("Champions").findOne({'key': id.toString()}, function(err, result) {
+                            if (err) throw err;
+                            console.log(result.icon)
+                            champIcon = result.icon
+                        });
+                db.close();
+                });
+            
+                resolve(champIcon);
+            });
+    }
