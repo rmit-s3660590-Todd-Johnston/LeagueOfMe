@@ -70,12 +70,13 @@ app.post('/', urlencodedParser,function(req,res){
                                                 data.totalPoints = await findTotalChampPoints(cm_URL);
                                                 data.champPoints = await findChampPoints(cm_URL);
                                                 data.topChamps = await top10champs(cm_URL);
-                                                var champIcons = [10];
-                                                for(var i = 0;i<champIcons.length;i++)
+                                                var topChamps =[10]
+                                                for(x =0;x<data.topChamps.length;x++)
                                                 {
-                                                    champIcons[i] = await champIcon(data.topChamps[i]);
+                                                    console.log(x)
+                                                    topChamps[x] = await champIcon(data.topChamps[x]);
                                                 }
-                                                data.top10ChampIcons = champIcons[i];
+                                                data.top10ChampIcons = topChamps;
                                             } catch (err) {
                                                 console.log(err)
                                             }
@@ -217,7 +218,7 @@ function top10champs(cm_URL)
                 var json = JSON.parse(body);
                 var i;
                 var champions = [10];
-                for(i = 0; i<9; i++)
+                for(i = 0; i<10; i++)
                 {
                     champions[i] = json[i].championId;
                 }
@@ -230,20 +231,20 @@ function top10champs(cm_URL)
 
 function champIcon(id)
     {
-        return new Promise(function (resolve ,reject){
-        var champIcon;
-        
-            MongoClient.connect("mongodb+srv://nick:lolman1@cluster0-kxw5r.gcp.mongodb.net/test?retryWrites=true&w=majority", function(err, db) {
-                    if (err) throw err;
-                    var dbo = db.db("LeagueofME");
+
+        return new Promise(function (resolve ,reject) {
+
+                    MongoClient.connect("mongodb+srv://nick:lolman1@cluster0-kxw5r.gcp.mongodb.net/test?retryWrites=true&w=majority", function(err, db) {
+                        if (err) throw err;
+                        var dbo = db.db("LeagueofME");
                         dbo.collection("Champions").findOne({'key': id.toString()}, function(err, result) {
                             if (err) throw err;
-                            console.log(result.icon)
-                            champIcon = result.icon
+                            var result = result.icon
+                            db.close();
+                            resolve(result);
                         });
-                db.close();
-                });
-            
-                resolve(champIcon);
-            });
+                    });
+
+        });
+
     }
