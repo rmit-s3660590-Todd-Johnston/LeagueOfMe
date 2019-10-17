@@ -2,7 +2,6 @@
   <head>
      <link rel="stylesheet" type="text/css" href="/css/home.css">
     <!--Load the AJAX API-->
-    
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
 
@@ -104,9 +103,10 @@
   </head>
 <!--Div for visuals-->
     <div id = "visuals_div">
-      <div id="icon_div"><img src={{info.champIcon}} width="200" height="200"></div>
+        {{#if info.tierIcon}}
+      <div id="icon_div"><img src="{{info.champIcon}}" width="200" height="200"></div>
       <div id="chart_div"></div>
-      <div id="rank_div"><img src={{info.tierIcon}} width="200" height="200"></div>
+      <div id="rank_div"><img src="{{info.tierIcon}}" width="200" height="200"></div>
     </div>
   <body>
     <div id="content">{{info.name}} has an id of {{info.id}} and is ranked: {{info.tier}} {{info.rank}}
@@ -147,5 +147,6 @@
     </div>
     <div id = "barchart_div"></div>
   </body>
+        {{/if}}
 </html>
 
