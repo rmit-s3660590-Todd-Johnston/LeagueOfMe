@@ -10,13 +10,14 @@
       google.charts.load('current', {'packages':['corechart']});
 
       // Set a callback to run when the Google Visualization API is loaded.
-      google.charts.setOnLoadCallback(drawChart);
+      google.charts.setOnLoadCallback(drawFavChart);
+      google.charts.setOnLoadCallback(drawAllChart);
 
       // Callback that creates and populates a data table,
       // instantiates the pie chart, passes in the data and
       // draws it.
       
-      function drawChart() {
+      function drawFavChart() {
 
         // Create the data table.
         var champName = "{{info.champName}}";
@@ -57,6 +58,48 @@
         var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
         chart.draw(data, options);
       }
+
+/*
+      function drawAllChart() {
+
+        // Create the data table.
+        var champName = "{{info.champName}}";
+        var champPoints = {{info.champPoints}};
+        var totalPoints = {{info.totalPoints}};
+        var top10ChampPoints = {{info.top10ChampPoints}};
+        var top10ChampNames = {{info.top10ChampNames}};
+        var data = new google.visualization.arrayToDataTable([;
+          ['Champion', 'Points', {role: 'style'}, {role, 'annotation'} ],
+          [top10ChampNames[0], top10ChampPoints[0], '#06b0ff'],
+          [top10ChampNames[0], top10ChampPoints[1], '#ff0a58'],
+          [top10ChampNames[0], top10ChampPoints[2], '#06b0ff'],
+          [top10ChampNames[0], top10ChampPoints[3], '#ff0a58'],
+          [top10ChampNames[0], top10ChampPoints[4], '#06b0ff'],
+          [top10ChampNames[0], top10ChampPoints[5], '#ff0a58'],
+          [top10ChampNames[0], top10ChampPoints[6], '#06b0ff'],
+          [top10ChampNames[0], top10ChampPoints[7], '#ff0a58'],
+          [top10ChampNames[0], top10ChampPoints[8], '#06b0ff'],
+          [top10ChampNames[0], top10ChampPoints[9], '#ff0a58'],
+        ]);
+        var summonerName = "{{info.name}}";
+        // Set chart options
+        var options = {'title': summonerName + "'s Top 10 Champions'",
+                       width: 90%,
+                       height: 250,
+                       backgroundColor: { fill:'transparent' },
+                       titleTextStyle: {
+                        color: '#ffdd06',    // any HTML string color ('red', '#cc00cc')
+                        fontName: 'Calibri', // i.e. 'Times New Roman'
+                        fontSize: 20, // 12, 18 whatever you want (don't specify px)
+                                      },                        
+                        };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('barchart_div'));
+        chart.draw(data, options);
+      }
+*/
+
     </script>
   </head>
 <!--Div for visuals-->
@@ -102,7 +145,7 @@
             <img  src={{info.top10ChampIcons.[9]}} >
         </div>
     </div>
-
+    <div id = "barchart_div"></div>
   </body>
 </html>
 
