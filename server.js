@@ -54,6 +54,7 @@ app.post('/', urlencodedParser,function(req,res){
                                         topChamps[x] = await champIcon(data.topChamps[x]);
                                     }
                                     data.top10ChampIcons = topChamps;
+                                    data.top10ChampPoints = await findTop10ChampPoints(cm_URL);
                                 } catch (err) {
                                     console.log(err)
                                 }
@@ -88,6 +89,7 @@ app.post('/', urlencodedParser,function(req,res){
                                                 }
                                                 data.top10ChampIcons = topChampIcon;
                                                 data.top10ChampNames = topChampNames;
+                                                data.top10ChampPoints = await findTop10ChampPoints(cm_URL);
 
                                                 console.log(topChamps)
                                             } catch (err) {
@@ -261,3 +263,23 @@ function champIcon(id)
         });
 
     }
+
+function findTop10ChampPoints(cm_URL)
+{
+    return new Promise(function (resolve ,reject) {
+        request(cm_URL,  function (err, response, body)
+        {
+            if(!err && response.statusCode == 200)
+            {
+                var champPoints = [10];
+                var json = JSON.parse(body);
+                for(var i = 0; i <= 10; i++)
+                {
+                champPoints[i] = json[i].championPoints;
+                console.log(champPoints[i])
+                }
+            }
+            resolve(champPoints);
+        });
+    });
+}
