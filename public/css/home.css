@@ -58,3 +58,9 @@ font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; font-size: 14px; fo
     clear: both;
     display: table;
 }
+
+#columnchart_div
+{
+  width:100%;
+  height: 300px;
+}

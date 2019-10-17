@@ -18,7 +18,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 app.post('/', urlencodedParser,function(req,res){
     var data = {};
-    var api_key ='RGAPI-d707939c-f2c8-4433-ab3b-7287f7ff2fd7';
+    var api_key ='RGAPI-2279b926-44f8-4978-b853-6e16354eb7e8';
     var s_toSearch = req.body.name
     var r_toSearch = req.body.region
     var sum_URL = 'https://'+r_toSearch+'.api.riotgames.com/lol/summoner/v4/summoners/by-name/'+s_toSearch+'?api_key=' +api_key;
@@ -35,22 +35,29 @@ app.post('/', urlencodedParser,function(req,res){
                     if(!err && response.statusCode == 200){
                         var json = JSON.parse(body);
                         if(json.length === 0 ){
-                            data.tier = 'unranked, ';
+                            data.tier = 'unranked';
                             data.rank = '';
                             try {
-                                var favChamp = await findChampMastery(cm_URL)
-                                data.champIcon = favChamp.icon
-                                data.champName = favChamp.name
-                                data.champPoints = await findChampPoints(cm_URL);
-                                data.totalPoints = await findTotalChampPoints(cm_URL);
-                                data.topChamps = await top10champs(cm_URL);
-                                var champIcons = [10];
-                                for(var i = 0;i<champIcons.length;i++)
-                                {
-                                    champIcons[i] = await champIcon(data.topChamps[i]);
-                                    console.log(champIcons[i]);
+                                var nRank = await findRankIcon(data.tier);
+                                data.tierIcon = nRank.Icon;
+                                try {
+                                    var favChamp = await findChampMastery(cm_URL)
+                                    data.champIcon = favChamp.icon
+                                    data.champName = favChamp.name
+                                    data.totalPoints = await findTotalChampPoints(cm_URL);
+                                    data.champPoints = await findChampPoints(cm_URL);
+                                    data.topChamps = await top10champs(cm_URL);
+                                    var topChamps =[10]
+                                    for(x =0;x<data.topChamps.length;x++)
+                                    {
+                                        console.log(x)
+                                        topChamps[x] = await champIcon(data.topChamps[x]);
+                                    }
+                                    data.top10ChampIcons = topChamps;
+                                    data.top10ChampPoints = await findTop10ChampPoints(cm_URL);
+                                } catch (err) {
+                                    console.log(err)
                                 }
-                                data.top10ChampIcons = champIcons[i];
                             }catch(err){
                                 console.log(err)
                             }
@@ -71,12 +78,20 @@ app.post('/', urlencodedParser,function(req,res){
                                                 data.champPoints = await findChampPoints(cm_URL);
                                                 data.topChamps = await top10champs(cm_URL);
                                                 var topChamps =[10]
+                                                var topChampIcon = [10]
+                                                var topChampNames = [10]
                                                 for(x =0;x<data.topChamps.length;x++)
                                                 {
                                                     console.log(x)
                                                     topChamps[x] = await champIcon(data.topChamps[x]);
+                                                    topChampIcon[x] = topChamps[x].icon;
+                                                    topChampNames[x] = topChamps[x].name;
                                                 }
-                                                data.top10ChampIcons = topChamps;
+                                                data.top10ChampIcons = topChampIcon;
+                                                data.top10ChampNames = topChampNames;
+                                                data.top10ChampPoints = await findTop10ChampPoints(cm_URL);
+
+                                                console.log(topChamps)
                                             } catch (err) {
                                                 console.log(err)
                                             }
@@ -195,17 +210,18 @@ function findTotalChampPoints(cm_URL)
 function findChampPoints(cm_URL)
 {
     return new Promise(function (resolve ,reject) {
-    request(cm_URL,  function (err, response, body)
-    {
-        if(!err && response.statusCode == 200) 
+        request(cm_URL,  function (err, response, body)
         {
-            var json = JSON.parse(body);
-            var champPoints = json[0].championPoints;
-            console.log(champPoints)
-        }
-        resolve(champPoints);
+            if(!err && response.statusCode == 200)
+            {
+                var json = JSON.parse(body);
+
+                var champPoints = json[0].championPoints;
+                console.log(champPoints)
+            }
+            resolve(champPoints);
+        });
     });
-});
 }
 
 function top10champs(cm_URL)
@@ -239,7 +255,6 @@ function champIcon(id)
                         var dbo = db.db("LeagueofME");
                         dbo.collection("Champions").findOne({'key': id.toString()}, function(err, result) {
                             if (err) throw err;
-                            var result = result.icon
                             db.close();
                             resolve(result);
                         });
@@ -248,3 +263,23 @@ function champIcon(id)
         });
 
     }
+
+function findTop10ChampPoints(cm_URL)
+{
+    return new Promise(function (resolve ,reject) {
+        request(cm_URL,  function (err, response, body)
+        {
+            if(!err && response.statusCode == 200)
+            {
+                var champPoints = [10];
+                var json = JSON.parse(body);
+                for(var i = 0; i <= 10; i++)
+                {
+                champPoints[i] = json[i].championPoints;
+                console.log(champPoints[i])
+                }
+            }
+            resolve(champPoints);
+        });
+    });
+}
