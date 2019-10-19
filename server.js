@@ -18,7 +18,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 app.post('/', urlencodedParser,function(req,res){
     var data = {};
-    var api_key ='RGAPI-2279b926-44f8-4978-b853-6e16354eb7e8';
+    var api_key ='RGAPI-07bb39d8-4c01-4fcb-938f-7cf3df7a7485';
     var s_toSearch = req.body.name
     var r_toSearch = req.body.region
     var sum_URL = 'https://'+r_toSearch+'.api.riotgames.com/lol/summoner/v4/summoners/by-name/'+s_toSearch+'?api_key=' +api_key;
@@ -48,13 +48,19 @@ app.post('/', urlencodedParser,function(req,res){
                                     data.champPoints = await findChampPoints(cm_URL);
                                     data.topChamps = await top10champs(cm_URL);
                                     var topChamps =[10]
+                                    var topChampIcon = [10]
+                                    var topChampNames = [10]
                                     for(x =0;x<data.topChamps.length;x++)
                                     {
                                         console.log(x)
                                         topChamps[x] = await champIcon(data.topChamps[x]);
+                                        topChampIcon[x] = topChamps[x].icon;
+                                        topChampNames[x] = topChamps[x].name;
                                     }
-                                    data.top10ChampIcons = topChamps;
+                                    data.top10ChampIcons = topChampIcon;
+                                    data.top10ChampNames = topChampNames;
                                     data.top10ChampPoints = await findTop10ChampPoints(cm_URL);
+
                                 } catch (err) {
                                     console.log(err)
                                 }
@@ -91,11 +97,12 @@ app.post('/', urlencodedParser,function(req,res){
                                                 data.top10ChampNames = topChampNames;
                                                 data.top10ChampPoints = await findTop10ChampPoints(cm_URL);
 
-                                                console.log(topChamps)
                                             } catch (err) {
+
                                                 console.log(err)
                                             }
                                         } catch (err) {
+
                                             console.log(err)
                                         }
 
@@ -111,6 +118,15 @@ app.post('/', urlencodedParser,function(req,res){
 
                 });
             }else{
+                data.noChamp = true;
+                console.log(data)
+                if(err){
+                    console.log(err);
+                    return;
+                }
+                res.render('home',{
+                    info: data
+                })
                 console.log(err)
             }
 
